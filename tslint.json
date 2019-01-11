@@ -20,7 +20,7 @@
     ],
     "no-console": [true],
     "eofline": true,
-    "linebreak-style": [true, "LF"],
+    "linebreak-style": [true, "CRLF"],
     "quotemark": [true, "single"],
     "indent": [true, "spaces", 2],
     "member-access": [false],
