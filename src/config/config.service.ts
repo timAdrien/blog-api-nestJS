@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
+import { Injectable } from '@nestjs/common'
+import * as dotenv from 'dotenv'
+import * as path from 'path'
 
 type EnvType =
   | 'DB_PORT'
@@ -8,31 +8,34 @@ type EnvType =
   | 'DB_HOST'
   | 'DB_USER'
   | 'DB_PWD'
-  | 'PORT';
+  | 'PORT'
+  | 'SECRET_KEY'
+  | 'DEFAULT_EXPIRATION'
+  | 'AUTH_ALGORITHM'
 
 @Injectable()
 export class ConfigService {
   constructor() {
-    let filename = '.env';
+    let filename = '.env'
     if (process.env.NODE_ENV === 'test') {
-      filename = `.env.${process.env.NODE_ENV}`;
+      filename = `.env.${process.env.NODE_ENV}`
     }
     dotenv.config({
       path: path.resolve(process.cwd(), filename),
-    });
+    })
   }
 
   getBoolean(key: EnvType) {
-    return !!process.env[key];
+    return !!process.env[key]
   }
 
   getNumber(key: EnvType) {
-    return +process.env[key] as number | undefined;
+    return +process.env[key] as number | undefined
   }
 
   getString(key: EnvType) {
-    return process.env[key];
+    return process.env[key]
   }
 }
 
-export const configService = new ConfigService();
+export const configService = new ConfigService()
