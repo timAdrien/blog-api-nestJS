@@ -1,0 +1,31 @@
+{
+  "testEnvironment": "node",
+  "setupTestFrameworkScriptFile": "<rootDir>/test/jest/setup.js",
+  "globalSetup": "<rootDir>/test/jest/global-setup.js",
+  "globalTeardown": "<rootDir>/test/jest/global-teardown.js",
+  "setupFiles": [],
+  "notify": true,
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  },
+  "testRegex": ".*\\.test.ts",
+  "modulePaths": ["<rootDir>/src/"],
+  "moduleFileExtensions": ["ts", "tsx", "js", "json"],
+  "collectCoverageFrom": [
+    "src/**/*.{js,jsx,tsx,ts}",
+    "!src/app.controller.ts",
+    "!**/node_modules/**",
+    "!**/dist/**",
+    "!**/vendor/**",
+    "!src/**/*.d.ts",
+    "!src/**/*.*spec.*ts",
+    "!src/**/*.module.ts",
+    "!src/**/*.dto.ts",
+    "!src/**/*.repository.ts"
+  ],
+  "coverageReporters": ["json", "lcov"],
+  "coverageDirectory": "coverage",
+  "verbose": true,
+  "watchPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/dist/"],
+  "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/dist/"]
+}

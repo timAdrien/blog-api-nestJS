@@ -24,7 +24,7 @@
     "quotemark": [true, "single"],
     "indent": [true, "spaces", 2],
     "member-access": [false],
-    "ordered-imports": [true],
+    "ordered-imports": [false],
     "no-duplicate-imports": true,
     "no-require-imports": true,
     "prefer-const": true,
@@ -35,6 +35,7 @@
     "no-trailing-whitespace": [true, "ignore-comments", "ignore-jsdoc"],
     "no-consecutive-blank-lines": [true],
     "object-literal-sort-keys": false,
+    "no-implicit-dependencies": false,
     "member-ordering": [
       true,
       {
@@ -70,5 +71,5 @@
     "one-line": [false],
     "one-variable-per-declaration": [false]
   },
- "rulesDirectory": ["tslint-plugin-prettier"]
+  "rulesDirectory": ["tslint-plugin-prettier"]
 }
