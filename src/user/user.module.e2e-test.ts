@@ -1,17 +1,17 @@
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { setupDB } from '../../test/tools/setup.tools'
-import { UserModule } from './user.module'
+import { UserNestModule } from './user.module'
 import { getConnection } from 'typeorm'
 
-describe('UserCotnroller (e2e)', () => {
+describe('UserNestCotnroller (e2e)', () => {
   let app: INestApplication
 
   beforeAll(async () => {
     await setupDB()
 
     const moduleFixture = await Test.createTestingModule({
-      imports: [UserModule],
+      imports: [UserNestModule],
     }).compile()
 
     app = moduleFixture.createNestApplication()

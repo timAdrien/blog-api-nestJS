@@ -1,28 +1,28 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { UserRepository } from './user.repository'
-import { User } from './entity/user.entity'
+import { UserNestRepository } from './user.repository'
+import { UserNest } from './entity/user.entity'
 
 @Injectable()
-export class UserService {
+export class UserNestService {
   constructor(
-    @Inject(UserRepository) private readonly userRepository: UserRepository
+    @Inject(UserNestRepository) private readonly userRepository: UserNestRepository
   ) {}
 
   /**
    * Returns a user identified by its id
    *
    * @param id - user id
-   * @returns Resolves with User
+   * @returns Resolves with UserNest
    */
-  async create(data: Partial<User>) {
-    return this.userRepository.save(new User(data))
+  async create(data: Partial<UserNest>) {
+    return this.userRepository.save(new UserNest(data))
   }
 
   /**
    * Returns a user identified by its email
    *
    * @param email - user email
-   * @returns Resolves with User
+   * @returns Resolves with UserNest
    */
   async getByEmail(email: string) {
     return this.userRepository.findOne({ where: { email } })
@@ -32,7 +32,7 @@ export class UserService {
    * Returns a user identified by its id
    *
    * @param id - user id
-   * @returns Resolves with User
+   * @returns Resolves with UserNest
    */
   async getById(id: string) {
     return this.userRepository.findOne(id)

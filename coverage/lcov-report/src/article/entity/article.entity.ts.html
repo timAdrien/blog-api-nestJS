@@ -171,7 +171,7 @@
   UpdateDateColumn,
 } from 'typeorm'
 <span class="cstat-no" title="statement not covered" >import { Comment } from '../../comment/entity/comment.entity'</span>
-<span class="cstat-no" title="statement not covered" >import { User } from '../../user/entity/user.entity'</span>
+<span class="cstat-no" title="statement not covered" >import { UserNest } from '../../user/entity/user.entity'</span>
 <span class="cstat-no" title="statement not covered" >import {  getCopyConstruction, getCopyConstructions, getOrDefault } from '../../utils/copy-constructor.tools'</span>
 &nbsp;
 @Entity()
@@ -179,8 +179,8 @@
   @PrimaryGeneratedColumn('uuid', { name: 'article_id' })
 <span class="cstat-no" title="statement not covered" >  articleId: string</span>
 &nbsp;
-  @ManyToOne(<span class="fstat-no" title="function not covered" >type</span> =&gt; <span class="cstat-no" title="statement not covered" >User,</span> <span class="fstat-no" title="function not covered" >user</span> =&gt; <span class="cstat-no" title="statement not covered" >user.articles)</span>
-<span class="cstat-no" title="statement not covered" >  author: User</span>
+  @ManyToOne(<span class="fstat-no" title="function not covered" >type</span> =&gt; <span class="cstat-no" title="statement not covered" >UserNest,</span> <span class="fstat-no" title="function not covered" >user</span> =&gt; <span class="cstat-no" title="statement not covered" >user.articles)</span>
+<span class="cstat-no" title="statement not covered" >  author: UserNest</span>
 &nbsp;
   @OneToMany(<span class="fstat-no" title="function not covered" >type</span> =&gt; <span class="cstat-no" title="statement not covered" >Comment,</span> <span class="fstat-no" title="function not covered" >comment</span> =&gt; <span class="cstat-no" title="statement not covered" >comment.article)</span>
 <span class="cstat-no" title="statement not covered" >  comments: Comment[]</span>
@@ -211,7 +211,7 @@
 &nbsp;
 <span class="fstat-no" title="function not covered" >  constructor(</span>copy: Partial&lt;Article&gt; = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
 <span class="cstat-no" title="statement not covered" >    this.articleId = getOrDefault(copy.articleId, undefined) as any</span>
-<span class="cstat-no" title="statement not covered" >    this.author = getCopyConstruction(User, copy.author) as any</span>
+<span class="cstat-no" title="statement not covered" >    this.author = getCopyConstruction(UserNest, copy.author) as any</span>
 <span class="cstat-no" title="statement not covered" >    this.comments = getCopyConstructions(Comment, copy.comments) as any</span>
 <span class="cstat-no" title="statement not covered" >    this.content = getOrDefault(copy.content, undefined)</span>
 <span class="cstat-no" title="statement not covered" >    this.disLikes = getOrDefault(copy.disLikes, undefined)</span>

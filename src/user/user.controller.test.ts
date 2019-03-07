@@ -1,13 +1,13 @@
-import { UserController } from './user.controller'
-import { UserService } from './user.service'
+import { UserNestController } from './user.controller'
+import { UserNestService } from './user.service'
 
-describe('User Controller', () => {
-  let controller: UserController
-  let service: UserService
+describe('UserNest Controller', () => {
+  let controller: UserNestController
+  let service: UserNestService
 
   beforeAll(async () => {
     service = {} as any
-    controller = new UserController(service)
+    controller = new UserNestController(service)
   })
 
   describe('getById', () => {

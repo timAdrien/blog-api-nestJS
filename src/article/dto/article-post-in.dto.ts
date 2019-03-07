@@ -1,10 +1,10 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 import { Comment } from '../../comment/entity/comment.entity'
-import { User } from '../../user/entity/user.entity'
+import { UserNest } from '../../user/entity/user.entity'
 
 export class ArticlePostInDto {
   @ApiModelProperty()
-  readonly author: User
+  readonly author: UserNest
 
   @ApiModelProperty()
   readonly comments: Comment[]

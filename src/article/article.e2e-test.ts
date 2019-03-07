@@ -5,7 +5,7 @@ import * as request from 'supertest'
 import { ArticleModule } from './article.module'
 import { setupDB } from '../../test/tools/setup.tools'
 import { getConnection } from 'typeorm'
-import { User } from '../user/entity/user.entity'
+import { UserNest } from '../user/entity/user.entity'
 
 describe('ArticleController (e2e)', () => {
   let app: INestApplication
@@ -32,7 +32,7 @@ describe('ArticleController (e2e)', () => {
       const article = {
         title: 'Mon article de test',
         content: 'Content article test',
-        author: new User({ firstName: 'Bill' }),
+        author: new UserNest({ firstName: 'Bill' }),
       }
 
       return request(app.getHttpServer())

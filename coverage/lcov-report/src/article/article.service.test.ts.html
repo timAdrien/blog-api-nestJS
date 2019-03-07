@@ -135,7 +135,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { User } from '../user/entity/user.entity'</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { UserNest } from '../user/entity/user.entity'</span>
 import { ArticleRepository } from './article.repository'
 <span class="cstat-no" title="statement not covered" >import { ArticleService } from './article.service'</span>
 <span class="cstat-no" title="statement not covered" >import { Article } from './entity/article.entity'</span>
@@ -156,7 +156,7 @@ import { ArticleRepository } from './article.repository'
         content: 'Wallah quel super article',
         likes: 5,
         disLikes: 1,
-        author: new User({ firstName: 'Tim', lastName: 'Ad' }),
+        author: new UserNest({ firstName: 'Tim', lastName: 'Ad' }),
       })
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      repository.save = jest.fn().mockResolvedValue(newArticle)</span>

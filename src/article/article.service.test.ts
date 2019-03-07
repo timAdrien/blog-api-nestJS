@@ -1,4 +1,4 @@
-import { User } from '../user/entity/user.entity'
+import { UserNest } from '../user/entity/user.entity'
 import { ArticleRepository } from './article.repository'
 import { ArticleService } from './article.service'
 import { Article } from './entity/article.entity'
@@ -19,7 +19,7 @@ describe('ArticleService', () => {
         content: 'Wallah quel super article',
         likes: 5,
         disLikes: 1,
-        author: new User({ firstName: 'Tim', lastName: 'Ad' }),
+        author: new UserNest({ firstName: 'Tim', lastName: 'Ad' }),
       })
 
       repository.save = jest.fn().mockResolvedValue(newArticle)

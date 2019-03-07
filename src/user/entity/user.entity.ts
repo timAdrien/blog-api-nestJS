@@ -11,7 +11,7 @@ import { Comment } from '../../comment/entity/comment.entity'
 import { getCopyConstructions, getOrDefault } from '../../utils/copy-constructor.tools'
 
 @Entity()
-export class User {
+export class UserNest {
   @OneToMany(type => Article, article => article.author)
   articles: Article[]
 
@@ -42,7 +42,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid', { name: 'user_id' })
   userId: string
 
-  constructor(copy: Partial<User> = {}) {
+  constructor(copy: Partial<UserNest> = {}) {
     this.email = getOrDefault(copy.email, undefined) as any
     this.articles = getCopyConstructions(Article, copy.articles) as any
     this.comments = getCopyConstructions(Comment, copy.comments) as any

@@ -1,13 +1,13 @@
-import { UserRepository } from './user.repository'
-import { UserService } from './user.service'
+import { UserNestRepository } from './user.repository'
+import { UserNestService } from './user.service'
 
-describe('UserService', () => {
-  let service: UserService
-  let repository: UserRepository
+describe('UserNestService', () => {
+  let service: UserNestService
+  let repository: UserNestRepository
 
   beforeAll(async () => {
     repository = {} as any
-    service = new UserService(repository)
+    service = new UserNestService(repository)
   })
 
   describe('getById', () => {

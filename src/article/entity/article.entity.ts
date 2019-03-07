@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Comment } from '../../comment/entity/comment.entity'
-import { User } from '../../user/entity/user.entity'
+import { UserNest } from '../../user/entity/user.entity'
 import {  getCopyConstruction, getCopyConstructions, getOrDefault } from '../../utils/copy-constructor.tools'
 
 @Entity()
@@ -16,8 +16,8 @@ export class Article {
   @PrimaryGeneratedColumn('uuid', { name: 'article_id' })
   articleId: string
 
-  @ManyToOne(type => User, user => user.articles)
-  author: User
+  @ManyToOne(type => UserNest, user => user.articles)
+  author: UserNest
 
   @OneToMany(type => Comment, comment => comment.article)
   comments: Comment[]
@@ -48,7 +48,7 @@ export class Article {
 
   constructor(copy: Partial<Article> = {}) {
     this.articleId = getOrDefault(copy.articleId, undefined) as any
-    this.author = getCopyConstruction(User, copy.author) as any
+    this.author = getCopyConstruction(UserNest, copy.author) as any
     this.comments = getCopyConstructions(Comment, copy.comments) as any
     this.content = getOrDefault(copy.content, undefined)
     this.dateLastToken = getOrDefault(copy.dateLastToken, undefined)
