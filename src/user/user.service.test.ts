@@ -1,5 +1,6 @@
 import { UserNestRepository } from './user.repository'
 import { UserNestService } from './user.service'
+import { UserNest } from './entity/user.entity'
 
 describe('UserNestService', () => {
   let service: UserNestService
@@ -20,6 +21,25 @@ describe('UserNestService', () => {
 
       expect(result).toBe(user)
       expect(repository.findOne).toHaveBeenCalledWith(id)
+    })
+  })
+
+  describe('update', () => {
+    it('should call and return repository.save with dto passed in param', async () => {
+      const user = new UserNest({
+        email: 'ta@gmail.com',
+        firstName: 'test update firstName',
+        lastName: 'test update lastName',
+        mobilePhone: '0654751254',
+        userId: '3a1066dc-28c9-485f-a2b4-85fc231d263c',
+      })
+
+      repository.save = jest.fn().mockResolvedValue(user)
+
+      const result = await service.create(user)
+
+      expect(result).toBe(user)
+      expect(repository.save).toHaveBeenCalledWith(user)
     })
   })
 })

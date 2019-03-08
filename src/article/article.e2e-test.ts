@@ -6,6 +6,7 @@ import { ArticleModule } from './article.module'
 import { setupDB } from '../../test/tools/setup.tools'
 import { getConnection } from 'typeorm'
 import { UserNest } from '../user/entity/user.entity'
+import { Article } from './entity/article.entity';
 
 describe('ArticleController (e2e)', () => {
   let app: INestApplication
@@ -29,11 +30,11 @@ describe('ArticleController (e2e)', () => {
 
   describe('Create article', () => {
     it('/article/create', () => {
-      const article = {
+      const article = new Article({
         title: 'Mon article de test',
         content: 'Content article test',
         author: new UserNest({ firstName: 'Bill' }),
-      }
+      })
 
       return request(app.getHttpServer())
         .post('/article/create')
