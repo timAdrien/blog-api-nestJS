@@ -9,9 +9,9 @@ export class UserNestService {
   ) {}
 
   /**
-   * Returns a user identified by its id
+   * Create and returns a user identified by its id
    *
-   * @param id - user id
+   * @param data - user
    * @returns Resolves with UserNest
    */
   async create(data: Partial<UserNest>) {
@@ -36,5 +36,15 @@ export class UserNestService {
    */
   async getById(id: string) {
     return this.userRepository.findOne(id)
+  }
+
+  /**
+   * Update and returns a user identified by its id
+   *
+   * @param data - user
+   * @returns Resolves with UserNest
+   */
+  async update(data: Partial<UserNest>) {
+    return this.userRepository.save(data)
   }
 }

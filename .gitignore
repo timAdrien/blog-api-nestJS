@@ -6,4 +6,3 @@ node_modules/
 .vscode/
 
 dist/
-src/auth
