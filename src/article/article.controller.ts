@@ -28,7 +28,7 @@ export class ArticleController {
     return this.articleService.getById(id)
   }
 
-  @Get(':title')
+  @Get('get_by_title/:title')
   @ApiResponse({ status: HttpStatus.OK, description: 'Article trouvé.' })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,

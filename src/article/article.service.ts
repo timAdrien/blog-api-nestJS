@@ -26,7 +26,15 @@ export class ArticleService {
    * @returns Resolves with Article
    */
   async getById(id: string) {
-    return this.articleRepository.findOne(id)
+    let articleToReturn = null
+    articleToReturn = await this.articleRepository.findOne(id)
+    if (articleToReturn.author) {
+      // Données confidentielles
+      articleToReturn.author.created = ''
+      articleToReturn.author.updated = ''
+      articleToReturn.author.password = ''
+    }
+    return articleToReturn
   }
 
   /**
@@ -36,7 +44,15 @@ export class ArticleService {
    * @returns Resolves with Article
    */
   async getByTitle(title: string) {
-    return this.articleRepository.findOne({ where: { title } })
+    let articleToReturn = null
+    articleToReturn = await this.articleRepository.findOne({ where: { title } })
+    if (articleToReturn.author) {
+      // Données confidentielles
+      articleToReturn.author.created = ''
+      articleToReturn.author.updated = ''
+      articleToReturn.author.password = ''
+    }
+    return articleToReturn
   }
 
   /**
