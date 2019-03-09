@@ -16,10 +16,16 @@ export class Article {
   @PrimaryGeneratedColumn('uuid', { name: 'article_id' })
   articleId: string
 
-  @ManyToOne(type => UserNest, user => user.articles)
+  @ManyToOne(type => UserNest, user => user.articles, {
+    eager: true,
+    cascade: true
+  })
   author: UserNest
 
-  @OneToMany(type => Comment, comment => comment.article)
+  @OneToMany(type => Comment, comment => comment.article, {
+    eager: true,
+    cascade: true
+  })
   comments: Comment[]
 
   @Column({ type: 'varchar', name: 'content' })
@@ -40,7 +46,7 @@ export class Article {
   @Column({ type: 'varchar', name: 'picture', nullable: true })
   picture: Buffer | File
 
-  @Column({ type: 'varchar', name: 'title' })
+  @Column({ type: 'varchar', name: 'title', unique: true })
   title: string
 
   @UpdateDateColumn()

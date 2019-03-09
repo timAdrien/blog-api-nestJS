@@ -43,4 +43,17 @@ describe('ArticleService', () => {
       expect(repository.findOne).toHaveBeenCalledWith(id)
     })
   })
+
+  describe('getByTitle', () => {
+    it('Should call and return repository.findOne with title passed in param', async () => {
+      const title = 'article 1'
+      const user = { name: 'toto' }
+      repository.findOne = jest.fn().mockResolvedValue(user)
+
+      const result = await service.getByTitle(title)
+
+      expect(result).toBe(user)
+      expect(repository.findOne).toHaveBeenCalledWith({ where: { title } })
+    })
+  })
 })

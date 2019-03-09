@@ -1,7 +1,8 @@
 import { ArticleController } from './article.controller'
 import { ArticleService } from './article.service'
+import { Comment } from '../comment/entity/comment.entity'
 
-describe('UserNest Controller', () => {
+describe('Article Controller', () => {
   let controller: ArticleController
   let service: ArticleService
   const titleArticle = 'Mon article de test'
@@ -12,10 +13,10 @@ describe('UserNest Controller', () => {
   })
 
   describe('Create article', () => {
-    it('should return the result of service.getById', async () => {
+    it('should create article', async () => {
       const article = {
         title: titleArticle,
-        content: 'Content article test'
+        content: 'Content article test',
       }
 
       service.create = jest.fn().mockResolvedValue(article)
@@ -29,7 +30,13 @@ describe('UserNest Controller', () => {
 
   describe('getByTitle Article', () => {
     it('should return the result of service.getByTitle', async () => {
-      const article = { title: 'Test article' }
+      const article = {
+        title: titleArticle,
+        comments: [
+          new Comment({ content: 'blabla' }),
+          new Comment({ content: 'blabla 2' }),
+        ],
+      }
       service.getByTitle = jest.fn().mockResolvedValue(article)
 
       const result = await controller.getByTitle(titleArticle)
@@ -42,12 +49,12 @@ describe('UserNest Controller', () => {
   describe('getById Article', () => {
     it('should return the result of service.getById', async () => {
       const id = 'monId'
-      const user = { name: 'toto' }
-      service.getById = jest.fn().mockResolvedValue(user)
+      const article = { title: 'toto' }
+      service.getById = jest.fn().mockResolvedValue(article)
 
       const result = await controller.getById(id)
 
-      expect(result).toBe(user)
+      expect(result).toBe(article)
       expect(service.getById).toHaveBeenCalledWith(id)
     })
   })
