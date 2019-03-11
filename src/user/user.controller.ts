@@ -30,4 +30,10 @@ export class UserNestController {
   async update(@Body() dto: UserNestUpdatePostInDto) {
     return this.userService.update(dto)
   }
+
+
+  VERIFIER LA LISTE DES ISSUES ET LES INCLURES EN COMMENTANT DANS LA PULL REQUEST 
+  CAR J'EN AI QUI SONT FAITE DEJA
+
+
 }
