@@ -1,6 +1,8 @@
 import { ArticleController } from './article.controller'
 import { ArticleService } from './article.service'
 import { Comment } from '../comment/entity/comment.entity'
+import { UserNest } from '../user/entity/user.entity';
+import { Article } from './entity/article.entity';
 
 describe('Article Controller', () => {
   let controller: ArticleController
@@ -56,6 +58,28 @@ describe('Article Controller', () => {
 
       expect(result).toBe(article)
       expect(service.getById).toHaveBeenCalledWith(id)
+    })
+  })
+
+  describe('getAllPagined', () => {
+    it('Should call and return service.getAllPagined with step passed in param', async () => {
+      let lstArticles = []
+      let i: number
+      let authorOfArticles = new UserNest()
+      const step = 2
+
+      for (i = 0; i < 60; i++) {
+        lstArticles.push(new Article({ title: 'Article ' + i, author: authorOfArticles }))
+      }
+
+      const lstPagined = lstArticles.slice(20, 40)
+
+      service.getAllPagined = jest.fn().mockResolvedValue(lstPagined)
+
+      const result = await controller.getAllPagined(step)
+
+      expect(result).toBe(lstPagined)
+      expect(service.getAllPagined).toHaveBeenCalledWith(step)
     })
   })
 })
