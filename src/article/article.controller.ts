@@ -18,6 +18,16 @@ export class ArticleController {
     return this.articleService.create(article)
   }
 
+  @Post('saveList')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Article créé.' })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Une erreur est survenue dans la création de l\'article.',
+  })
+  async saveList(@Body() articles: ArticlePostInDto[]) {
+    return this.articleService.saveList(articles)
+  }
+
   @Get(':id')
   @ApiResponse({ status: HttpStatus.OK, description: 'Article trouvé.' })
   @ApiResponse({
@@ -36,5 +46,15 @@ export class ArticleController {
   })
   async getByTitle(@Param('title') title: string) {
     return this.articleService.getByTitle(title)
+  }
+
+  @Get('page/:step')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Articles trouvés.' })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Articles non trouvés :/'
+  })
+  async getAllPagined(@Param('step') step: string) {
+    return this.articleService.getAllPagined(parseInt(step))
   }
 }

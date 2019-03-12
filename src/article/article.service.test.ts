@@ -56,4 +56,26 @@ describe('ArticleService', () => {
       expect(repository.findOne).toHaveBeenCalledWith({ where: { title } })
     })
   })
+
+  describe('getAllPagined', () => {
+    it('Should call and return repository.find with step passed in param', async () => {
+      let lstArticles = []
+      let i: number
+      let authorOfArticles = new UserNest()
+      const step = 2
+
+      for (i = 0; i < 60; i++) {
+        lstArticles.push(new Article({ title: 'Article ' + i, author: authorOfArticles }))
+      }
+
+      const lstPagined = lstArticles.slice(20, 40)
+
+      repository.find = jest.fn().mockResolvedValue(lstPagined)
+
+      const result = await service.getAllPagined(step)
+
+      expect(result).toBe(lstPagined)
+      expect(repository.find).toHaveBeenCalledWith({ skip: step * 20, take: 20 })
+    })
+  })
 })

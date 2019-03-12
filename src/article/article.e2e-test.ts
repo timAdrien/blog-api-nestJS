@@ -13,11 +13,14 @@ import { getConnection } from 'typeorm'
 import { UserNest } from '../user/entity/user.entity'
 import { Article } from './entity/article.entity'
 import { Comment } from '../comment/entity/comment.entity'
-import { AuthService } from '../auth/auth.service';
+import { SignUpDto } from '../auth/dto/sign-up.dto'
+import { FunctionUtils } from '../utils/functions'
 
 describe('ArticleController (e2e)', () => {
   let app: INestApplication
-  let articleCreated: Article
+  let articleCreated: Article = new Article()
+  let userConnected: UserNest = new UserNest()
+  let token: string
 
   beforeAll(async () => {
     await setupDB()
@@ -28,6 +31,28 @@ describe('ArticleController (e2e)', () => {
 
     app = moduleFixture.createNestApplication()
     await app.init()
+
+    const authInfo: SignUpDto = {
+      email: 'ta@gmail.com',
+      password: 'pass',
+      firstName: 'Bill',
+      lastName: 'pass',
+      mobilePhone: 'pass',
+    }
+
+    userConnected = new UserNest(authInfo)
+
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send(authInfo)
+      .expect(201)
+
+    const res = await request(app.getHttpServer())
+      .post('/auth/signin')
+      .send(authInfo)
+      .expect(201)
+    token = res.body.token
+    userConnected.userId = res.body.userId
   })
 
   afterAll(async () => {
@@ -43,7 +68,7 @@ describe('ArticleController (e2e)', () => {
       articleCreated = new Article({
         title: 'Mon article',
         content: 'Content article test',
-        author: new UserNest({ firstName: 'Bill', lastName: 'Bob', password:  await AuthService.hashPassword('007'), email: 'ta@gmail.com', mobilePhone: '0600000000' }),
+        author: userConnected,
         comments: [
           new Comment({ content: 'blabla' }),
           new Comment({ content: 'blabla 2' }),
@@ -54,13 +79,16 @@ describe('ArticleController (e2e)', () => {
         .post('/article/create')
         .send(articleCreated)
         .expect(201)
+        .then(res => {
+          articleCreated = new Article(res.body)
+        })
     })
   })
 
   describe('Get article by title', async () => {
-    it('/article/getByTitle unlogged', async () => {
+    it('/article/get_by_title/:title unlogged', async () => {
       return request(app.getHttpServer())
-        .get('/article/get_by_title/' + 'Mon article')
+        .get('/article/get_by_title/' + articleCreated.title)
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual('')
@@ -69,21 +97,81 @@ describe('ArticleController (e2e)', () => {
         })
     })
 
-    it('/article/getByTitle logged', async () => {
-      const authInfo = { email: 'ta@gmail.com', password: '007' }
-      const req = await request(app.getHttpServer())
-        .post('/auth/signin')
-        .send(authInfo)
-        .expect(201)
-
+    it('/article/get_by_title/:title logged', async () => {
       return request(app.getHttpServer())
-        .get('/article/get_by_title/' + 'Mon article')
-        .set('Authorization', 'Bearer ' + req.body.token)
+        .get('/article/get_by_title/' + articleCreated.title)
+        .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual('')
           expect(res.body.author.firstName).toEqual('Bill')
           expect(res.body.comments.length).toEqual(2)
+        })
+    })
+  })
+
+  describe('Get article by id', async () => {
+    it('/article/:id unlogged', async () => {
+      return request(app.getHttpServer())
+        .get('/article/' + articleCreated.articleId)
+        .expect(200)
+        .then(res => {
+          expect(res.body.author.password).toEqual('')
+          expect(res.body.author.firstName).toEqual('Bill')
+          expect(res.body.comments.length).toEqual(2)
+        })
+    })
+
+    it('/article/:id logged', async () => {
+      return request(app.getHttpServer())
+        .get('/article/' + articleCreated.articleId)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .then(res => {
+          expect(res.body.author.password).toEqual('')
+          expect(res.body.author.firstName).toEqual('Bill')
+          expect(res.body.comments.length).toEqual(2)
+        })
+    })
+  })
+
+  describe('Get articles pagined', async () => {
+    let lstArticles = []
+    beforeAll(async () => {
+      // Create fake articles
+      let i: number
+      for (i = 1; i <= 60; i++) {
+        articleCreated = new Article({
+          title: 'Mon article ' + i,
+          content: 'Content article test',
+          author: userConnected,
+          comments: [],
+        })
+        lstArticles.push(articleCreated)
+      }
+
+      await request(app.getHttpServer())
+        .post('/article/saveList')
+        .send(lstArticles)
+    })
+
+    it('/article/page/:step unlogged', async () => {
+      await request(app.getHttpServer())
+        .get('/article/page/' + 2)
+        .expect(200)
+        .then(res => {
+          expect(res.body.length).toBeLessThanOrEqual(20)
+        })
+      return null
+    })
+
+    it('/article/page/:step logged', async () => {
+      return request(app.getHttpServer())
+        .get('/article/page/' + 2)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .then(res => {
+          expect(res.body.length).toBeLessThanOrEqual(20)
         })
     })
   })
