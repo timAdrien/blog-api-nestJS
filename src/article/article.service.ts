@@ -1,22 +1,39 @@
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { ArticleRepository } from './article.repository'
 import { Article } from './entity/article.entity'
+import { UserNestService } from '../user/user.service'
 
 @Injectable()
 export class ArticleService {
   constructor(
     @Inject(ArticleRepository)
-    private readonly articleRepository: ArticleRepository
+    private readonly articleRepository: ArticleRepository,
+    private readonly userService: UserNestService
   ) {}
 
   /**
-   * Returns a article identified
+   * Returns a article created
    *
    * @param article - article
    * @returns Resolves with Article
    */
   async create(data: Partial<Article>) {
-    return this.articleRepository.save(new Article(data))
+    return this.articleRepository.save(data)
+  }
+
+  /**
+   * Returns a article updated
+   *
+   * @param article - article
+   * @returns Resolves with Article
+   */
+  async update(data: Partial<Article>, idAuthor: string) {
+    const author = await this.userService.getById(idAuthor)
+    if (author && author.role == 'Author') {
+      return this.articleRepository.save(data)
+    } else {
+      throw new UnauthorizedException('You cannot edit this article')
+    }
   }
 
   /**
@@ -77,16 +94,19 @@ export class ArticleService {
       skip: step * 20
     })
   }
-  
+
   /**
-   * Returns a article identified
+   * Returns a article identified by its id
    *
-   * @param article - article
+   * @param id - article id
    * @returns Resolves with Article
    */
-  /*
-  async updateById(article: ArticlePostInDto) {
-    return this.articleRepository.save({}...ArticlePostInDto})
+  async getAllArticlesByAuthorId(idAuthor: string) {
+    const author = await this.userService.getById(idAuthor)
+    return this.articleRepository.find({
+      where : {
+        author: author
+      }
+    })
   }
-  */
 }

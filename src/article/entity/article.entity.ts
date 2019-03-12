@@ -42,10 +42,7 @@ export class Article {
 
   @Column({ type: 'int', name: 'likes', nullable: true })
   likes: number
-
-  @Column({ type: 'varchar', name: 'picture', nullable: true })
-  picture: Buffer | File
-
+  
   @Column({ type: 'varchar', name: 'title', unique: true })
   title: string
 
@@ -60,7 +57,6 @@ export class Article {
     this.dateLastToken = getOrDefault(copy.dateLastToken, undefined)
     this.disLikes = getOrDefault(copy.disLikes, undefined)
     this.likes = getOrDefault(copy.likes, undefined)
-    this.picture = getOrDefault(copy.picture, undefined)
     this.title = getOrDefault(copy.title, undefined)
   }
 }

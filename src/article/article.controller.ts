@@ -1,7 +1,8 @@
-import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, HttpStatus, Param, Post, Put } from '@nestjs/common'
 import { ApiResponse, ApiUseTags } from '@nestjs/swagger'
 import { ArticleService } from './article.service'
 import { ArticlePostInDto } from './dto/article-post-in.dto'
+import { ArticlePutInDto } from './dto/article-put-in.dto';
 
 @ApiUseTags('Article')
 @Controller('article')
@@ -56,5 +57,25 @@ export class ArticleController {
   })
   async getAllPagined(@Param('step') step: string) {
     return this.articleService.getAllPagined(parseInt(step))
+  }
+
+  @Get('author/:id')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Articles trouvés.' })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Articles non trouvés :/'
+  })
+  async getAllArticlesByAuthorId(@Param('id') id: string) {
+    return this.articleService.getAllArticlesByAuthorId(id)
+  }
+
+  @Put('update')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Article mis à jour.' })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Une erreur est survenue dans la mise à jour de l\'article.',
+  })
+  async update(@Body() data: ArticlePutInDto) {
+    return this.articleService.update(data, data.author.userId)
   }
 }

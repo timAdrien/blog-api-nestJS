@@ -35,7 +35,8 @@ export class UserNestService {
    * @returns Resolves with UserNest
    */
   async getById(id: string) {
-    return this.userRepository.findOne(id)
+    // User WHERE clause because else if not found it returns first row of table...
+    return this.userRepository.findOne({ where: { userId: id }})
   }
 
   /**

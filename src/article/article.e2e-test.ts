@@ -14,7 +14,7 @@ import { UserNest } from '../user/entity/user.entity'
 import { Article } from './entity/article.entity'
 import { Comment } from '../comment/entity/comment.entity'
 import { SignUpDto } from '../auth/dto/sign-up.dto'
-import { FunctionUtils } from '../utils/functions'
+import { getCopyConstruction } from '../utils/copy-constructor.tools'
 
 describe('ArticleController (e2e)', () => {
   let app: INestApplication
@@ -37,7 +37,7 @@ describe('ArticleController (e2e)', () => {
       password: 'pass',
       firstName: 'Bill',
       lastName: 'pass',
-      mobilePhone: 'pass',
+      mobilePhone: 'pass'
     }
 
     userConnected = new UserNest(authInfo)
@@ -156,13 +156,12 @@ describe('ArticleController (e2e)', () => {
     })
 
     it('/article/page/:step unlogged', async () => {
-      await request(app.getHttpServer())
+      return request(app.getHttpServer())
         .get('/article/page/' + 2)
         .expect(200)
         .then(res => {
           expect(res.body.length).toBeLessThanOrEqual(20)
         })
-      return null
     })
 
     it('/article/page/:step logged', async () => {
@@ -172,6 +171,37 @@ describe('ArticleController (e2e)', () => {
         .expect(200)
         .then(res => {
           expect(res.body.length).toBeLessThanOrEqual(20)
+        })
+    })
+  })
+
+  describe('Get articles of author', async () => {
+    it('/article/author/:id logged', async () => {
+      return request(app.getHttpServer())
+        .get('/article/author/' + userConnected.userId)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .then(res => {
+          // 61 because we created 1 + 60 others before
+          expect(res.body.length).toBe(61)
+        })
+    })
+  })
+
+  describe('Update Article of author', async () => {
+    it('/article/update logged', async () => {
+      let articleUpdated = getCopyConstruction(Article, articleCreated) as any
+      articleUpdated.title = 'New title updated'
+      articleUpdated.content = 'New content updated'
+
+      return request(app.getHttpServer())
+        .put('/article/update')
+        .send(articleUpdated)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .then(res => {
+          expect(res.body.title).toBe('New title updated')
+          expect(res.body.content).toBe('New content updated')
         })
     })
   })

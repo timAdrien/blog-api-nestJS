@@ -4,9 +4,10 @@ import { DatabaseModule } from '../utils/database/database.module'
 import { ArticleController } from './article.controller'
 import { ArticleRepository } from './article.repository'
 import { ArticleService } from './article.service'
+import { UserNestModule } from '../user/user.module'
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, UserNestModule],
   controllers: [ArticleController],
   providers: [ArticleService, customRepository(ArticleRepository)],
 })
