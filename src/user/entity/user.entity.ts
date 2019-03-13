@@ -39,7 +39,7 @@ export class UserNest {
   @Column({ type: 'varchar', name: 'picture', nullable: true })
   picture: Buffer | File
   
-  @Column({ type: 'varchar', name: 'role', default: 'Author' })
+  @Column({ type: 'varchar', name: 'role', default: 'User' })
   role: string
 
   @UpdateDateColumn()

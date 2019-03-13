@@ -15,13 +15,16 @@ import { Article } from './entity/article.entity'
 import { Comment } from '../comment/entity/comment.entity'
 import { SignUpDto } from '../auth/dto/sign-up.dto'
 import { getCopyConstruction } from '../utils/copy-constructor.tools'
-import { ArticleDeleteInDto } from './dto/article-delete-in.dto';
+import { ArticleDeleteInDto } from './dto/article-delete-in.dto'
+import { FunctionUtils } from '../utils/functions'
+import { IAuthHeaders } from '../auth/interfaces/IAuthHeaders'
 
 describe('ArticleController (e2e)', () => {
   let app: INestApplication
   let articleCreated: Article = new Article()
-  let userConnected: UserNest = new UserNest()
-  let token: string
+  let userAdmin: UserNest = new UserNest()
+  let userAuthor: UserNest = new UserNest()
+  let headers: IAuthHeaders
 
   beforeAll(async () => {
     await setupDB()
@@ -32,28 +35,19 @@ describe('ArticleController (e2e)', () => {
 
     app = moduleFixture.createNestApplication()
     await app.init()
-
-    const authInfo: SignUpDto = {
-      email: 'ta@gmail.com',
-      password: 'pass',
-      firstName: 'Bill',
-      lastName: 'pass',
-      mobilePhone: 'pass'
-    }
-
-    userConnected = new UserNest(authInfo)
-
+    headers = (await FunctionUtils.generateUserTest(app, 'headers@gmail.com')).headers
+    userAdmin = (await FunctionUtils.generateUserTest(app, 'admin@gmail.com')).user
+    userAuthor = (await FunctionUtils.generateUserTest(app, 'author@gmail.com')).user
+    
     await request(app.getHttpServer())
-      .post('/auth/signup')
-      .send(authInfo)
-      .expect(201)
-
+        .post('/user/TestRoute_setRoleUser')
+        .set(headers)
+        .send({ userId: userAdmin.userId, role: 'Administrator' })
+    
     const res = await request(app.getHttpServer())
-      .post('/auth/signin')
-      .send(authInfo)
-      .expect(201)
-    token = res.body.token
-    userConnected.userId = res.body.userId
+        .post('/user/TestRoute_setRoleUser')
+        .set(headers)
+        .send({ userId: userAuthor.userId, role: 'Author' })
   })
 
   afterAll(async () => {
@@ -69,7 +63,7 @@ describe('ArticleController (e2e)', () => {
       articleCreated = new Article({
         title: 'Mon article',
         content: 'Content article test',
-        author: userConnected,
+        author: userAuthor,
         comments: [
           new Comment({ content: 'blabla' }),
           new Comment({ content: 'blabla 2' }),
@@ -101,7 +95,7 @@ describe('ArticleController (e2e)', () => {
     it('/article/get_by_title/:title logged', async () => {
       return request(app.getHttpServer())
         .get('/article/get_by_title/' + articleCreated.title)
-        .set('Authorization', 'Bearer ' + token)
+        .set(headers)
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual(null)
@@ -126,7 +120,7 @@ describe('ArticleController (e2e)', () => {
     it('/article/:id logged', async () => {
       return request(app.getHttpServer())
         .get('/article/' + articleCreated.articleId)
-        .set('Authorization', 'Bearer ' + token)
+        .set(headers)
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual(null)
@@ -145,7 +139,7 @@ describe('ArticleController (e2e)', () => {
         articleCreated = new Article({
           title: 'Mon article ' + i,
           content: 'Content article test',
-          author: userConnected,
+          author: userAuthor,
           comments: [],
         })
         lstArticles.push(articleCreated)
@@ -168,7 +162,7 @@ describe('ArticleController (e2e)', () => {
     it('/article/page/:step logged', async () => {
       return request(app.getHttpServer())
         .get('/article/page/' + 2)
-        .set('Authorization', 'Bearer ' + token)
+        .set(headers)
         .expect(200)
         .then(res => {
           expect(res.body.length).toBeLessThanOrEqual(20)
@@ -179,8 +173,8 @@ describe('ArticleController (e2e)', () => {
   describe('Get articles of author', async () => {
     it('/article/author/:id logged', async () => {
       return request(app.getHttpServer())
-        .get('/article/author/' + userConnected.userId)
-        .set('Authorization', 'Bearer ' + token)
+        .get('/article/author/' + userAuthor.userId)
+        .set(headers)
         .expect(200)
         .then(res => {
           // 61 because we created 1 + 60 others before
@@ -198,7 +192,7 @@ describe('ArticleController (e2e)', () => {
       return request(app.getHttpServer())
         .put('/article/update')
         .send(articleUpdated)
-        .set('Authorization', 'Bearer ' + token)
+        .set(headers)
         .expect(200)
         .then(res => {
           expect(res.body.title).toBe('New title updated')
@@ -211,17 +205,17 @@ describe('ArticleController (e2e)', () => {
     it('/article/delete logged', async () => {
       let dataToSend: ArticleDeleteInDto 
       await request(app.getHttpServer())
-        .get('/article/author/' + userConnected.userId)
-        .set('Authorization', 'Bearer ' + token)
+        .get('/article/author/' + userAuthor.userId)
+        .set(headers)
         .expect(200)
         .then(res => {
-          dataToSend = { articleId: res.body[0].articleId, authorId: userConnected.userId }
+          dataToSend = { articleId: res.body[0].articleId, authorId: userAuthor.userId }
         })
 
       return request(app.getHttpServer())
         .delete('/article/delete')
         .send(dataToSend)
-        .set('Authorization', 'Bearer ' + token)
+        .set(headers)
         .expect(200)
     })
   })
