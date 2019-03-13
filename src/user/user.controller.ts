@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Put, Post, HttpStatus, Param, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Put, Post, HttpStatus, Param, UseGuards, Delete } from '@nestjs/common'
 import { ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger'
 import { UserNestService } from './user.service'
 import { JwtAuthGuard } from '../auth/auth.guard'
 import { UserNestUpdatePutInDto } from './dto/user-update-put-in.dto'
 import { UserNest } from './entity/user.entity';
 import { UserNestUpdateRolePutInDto } from './dto/user-update-role-put-in.dto'
+import { UserDeleteInDto } from './dto/user-delete-in-dto';
 
 @ApiUseTags('UserNest')
 @ApiBearerAuth()
@@ -65,5 +66,15 @@ export class UserNestController {
   })
   async updateRoleUser(@Body() dto: UserNestUpdateRolePutInDto) {
     return this.userService.updateRoleUser(dto)
+  }
+
+  @Delete('delete')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Article supprimé.' })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Une erreur est survenue dans la suppression du user'
+  })
+  async delete(@Body() data: UserDeleteInDto) {
+    return this.userService.delete(data.adminId ,data.userId)
   }
 }

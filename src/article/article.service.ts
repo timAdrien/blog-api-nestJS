@@ -125,7 +125,7 @@ export class ArticleService {
   }
   
   /**
-   * Returns a article identified by its id
+   * hard delete user
    *
    * @param id - article id
    * @returns Resolves with Article

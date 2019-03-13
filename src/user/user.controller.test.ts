@@ -69,4 +69,16 @@ describe('UserNest Controller', () => {
       expect(result.length).toBe(4)
     })
   })
+
+  describe('delete user', async () => {
+    it('Should call service.delete with article id passed in param', async () => {
+      
+      service.delete = jest.fn().mockResolvedValue({})
+      
+      const result = await controller.delete({ adminId: 'adminId', userId: 'userId'})
+
+      expect(result).toEqual({})
+      expect(service.delete).toHaveBeenCalledWith('adminId', 'userId')
+    })
+  })
 })
