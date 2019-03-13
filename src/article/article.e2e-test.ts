@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common'
+import { INestApplication, HttpStatus } from '@nestjs/common'
 import { ArticleRepository } from './article.repository'
 import { UserNestRepository } from '../user/user.repository'
 import { CommentRepository } from '../comment/comment.repository'
@@ -15,6 +15,7 @@ import { Article } from './entity/article.entity'
 import { Comment } from '../comment/entity/comment.entity'
 import { SignUpDto } from '../auth/dto/sign-up.dto'
 import { getCopyConstruction } from '../utils/copy-constructor.tools'
+import { ArticleDeleteInDto } from './dto/article-delete-in.dto';
 
 describe('ArticleController (e2e)', () => {
   let app: INestApplication
@@ -91,7 +92,7 @@ describe('ArticleController (e2e)', () => {
         .get('/article/get_by_title/' + articleCreated.title)
         .expect(200)
         .then(res => {
-          expect(res.body.author.password).toEqual('')
+          expect(res.body.author.password).toEqual(null)
           expect(res.body.author.firstName).toEqual('Bill')
           expect(res.body.comments.length).toEqual(2)
         })
@@ -103,7 +104,7 @@ describe('ArticleController (e2e)', () => {
         .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .then(res => {
-          expect(res.body.author.password).toEqual('')
+          expect(res.body.author.password).toEqual(null)
           expect(res.body.author.firstName).toEqual('Bill')
           expect(res.body.comments.length).toEqual(2)
         })
@@ -116,7 +117,7 @@ describe('ArticleController (e2e)', () => {
         .get('/article/' + articleCreated.articleId)
         .expect(200)
         .then(res => {
-          expect(res.body.author.password).toEqual('')
+          expect(res.body.author.password).toEqual(null)
           expect(res.body.author.firstName).toEqual('Bill')
           expect(res.body.comments.length).toEqual(2)
         })
@@ -128,7 +129,7 @@ describe('ArticleController (e2e)', () => {
         .set('Authorization', 'Bearer ' + token)
         .expect(200)
         .then(res => {
-          expect(res.body.author.password).toEqual('')
+          expect(res.body.author.password).toEqual(null)
           expect(res.body.author.firstName).toEqual('Bill')
           expect(res.body.comments.length).toEqual(2)
         })
@@ -203,6 +204,25 @@ describe('ArticleController (e2e)', () => {
           expect(res.body.title).toBe('New title updated')
           expect(res.body.content).toBe('New content updated')
         })
+    })
+  })
+
+  describe('Delete Article of author', async () => {
+    it('/article/delete logged', async () => {
+      let dataToSend: ArticleDeleteInDto 
+      await request(app.getHttpServer())
+        .get('/article/author/' + userConnected.userId)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
+        .then(res => {
+          dataToSend = { articleId: res.body[0].articleId, authorId: userConnected.userId }
+        })
+
+      return request(app.getHttpServer())
+        .delete('/article/delete')
+        .send(dataToSend)
+        .set('Authorization', 'Bearer ' + token)
+        .expect(200)
     })
   })
 })

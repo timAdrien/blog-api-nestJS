@@ -22,7 +22,7 @@ describe('ArticleService', () => {
     it('Should call and return repository.create with article passed in param', async () => {
       const newArticle = new Article({
         title: 'Mon super article',
-        content: 'Wallah quel super article',
+        content: 'Damn quel super article',
         likes: 5,
         disLikes: 1,
         author: new UserNest({ firstName: 'Tim', lastName: 'Ad' }),
@@ -108,6 +108,21 @@ describe('ArticleService', () => {
       const result = await service.getAllArticlesByAuthorId(author1Id)
 
       expect(result).toBe(lstArticles)
+    })
+  })
+  
+  describe('delete article', async () => {
+    it('Should call repository.delete with article id passed in param', async () => {
+      let authorOfArticles = new UserNest({ role: 'Author' })
+      
+      repository.delete = jest.fn().mockResolvedValue({})
+      userService.getById = jest.fn().mockResolvedValue(authorOfArticles)
+      
+      const result = await service.delete('articleId', 'authorId')
+
+      expect(result).toEqual({})
+      expect(repository.delete).toHaveBeenCalledWith('articleId')
+      expect(userService.getById).toHaveBeenCalledWith('authorId')
     })
   })
 })

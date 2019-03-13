@@ -53,13 +53,12 @@ export class ArticleService {
    * @returns Resolves with Article
    */
   async getById(id: string) {
-    let articleToReturn = null
-    articleToReturn = await this.articleRepository.findOne(id)
+    let articleToReturn = await this.articleRepository.findOne(id)
     if (articleToReturn && articleToReturn.author) {
       // Données confidentielles
-      articleToReturn.author.created = ''
-      articleToReturn.author.updated = ''
-      articleToReturn.author.password = ''
+      articleToReturn.author.created = null
+      articleToReturn.author.updated = null
+      articleToReturn.author.password = null
     }
     return articleToReturn
   }
@@ -71,13 +70,12 @@ export class ArticleService {
    * @returns Resolves with Article
    */
   async getByTitle(title: string) {
-    let articleToReturn = null
-    articleToReturn = await this.articleRepository.findOne({ where: { title } })
+    let articleToReturn = await this.articleRepository.findOne({ where: { title } })
     if (articleToReturn && articleToReturn.author) {
       // Données confidentielles
-      articleToReturn.author.created = ''
-      articleToReturn.author.updated = ''
-      articleToReturn.author.password = ''
+      articleToReturn.author.created = null
+      articleToReturn.author.updated = null
+      articleToReturn.author.password = null
     }
     return articleToReturn
   }
@@ -103,10 +101,29 @@ export class ArticleService {
    */
   async getAllArticlesByAuthorId(idAuthor: string) {
     const author = await this.userService.getById(idAuthor)
-    return this.articleRepository.find({
-      where : {
-        author: author
-      }
-    })
+    if(author) {
+      return this.articleRepository.find({
+        where : {
+          author: author
+        }
+      })
+    } else {
+      throw new UnauthorizedException('You get these articles')
+    }
+  }
+  
+  /**
+   * Returns a article identified by its id
+   *
+   * @param id - article id
+   * @returns Resolves with Article
+   */
+  async delete(idArticle: string, idAuthor: string) {
+    const author = await this.userService.getById(idAuthor)
+    if(author && author.role == "Author") {
+      return this.articleRepository.delete(idArticle)
+    } else {
+      throw new UnauthorizedException('You cannot remove this article')
+    }
   }
 }
