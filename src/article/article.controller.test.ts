@@ -66,7 +66,7 @@ describe('Article Controller', () => {
       let lstArticles = []
       let i: number
       let authorOfArticles = new UserNest()
-      const step = 2
+      const step:string = '2'
 
       for (i = 0; i < 60; i++) {
         lstArticles.push(new Article({ title: 'Article ' + i, author: authorOfArticles }))
@@ -79,7 +79,34 @@ describe('Article Controller', () => {
       const result = await controller.getAllPagined(step)
 
       expect(result).toBe(lstPagined)
-      expect(service.getAllPagined).toHaveBeenCalledWith(step)
+      expect(service.getAllPagined).toHaveBeenCalledWith(parseInt(step))
+    })
+  })
+
+  describe('getAllArticlesByAuthorId', () => {
+    it('Should call and return repository.find with authorId passed in param', async () => {
+      const author1Id = 'authorId'
+      let lstArticles = []
+      let lstArticles2 = []
+      let i: number
+      let authorOfArticles = new UserNest()
+      let author2OfArticles = new UserNest()
+      const step = 2
+
+      for (i = 0; i < 10; i++) {
+        lstArticles.push(new Article({ title: 'Article ' + i + 10, author: authorOfArticles }))
+      }
+
+      for (i = 0; i < 5; i++) {
+        lstArticles2.push(new Article({ title: 'Article ' + i, author: author2OfArticles }))
+      }
+
+      service.getAllArticlesByAuthorId = jest.fn().mockResolvedValue(lstArticles)
+
+      const result = await controller.getAllArticlesByAuthorId(author1Id)
+
+      expect(result).toBe(lstArticles)
+      expect(service.getAllArticlesByAuthorId).toHaveBeenCalledWith(author1Id)
     })
   })
 })

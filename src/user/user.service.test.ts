@@ -20,7 +20,7 @@ describe('UserNestService', () => {
       const result = await service.getById(id)
 
       expect(result).toBe(user)
-      expect(repository.findOne).toHaveBeenCalledWith(id)
+      expect(repository.findOne).toHaveBeenCalledWith({"where": {"userId": id}})
     })
   })
 

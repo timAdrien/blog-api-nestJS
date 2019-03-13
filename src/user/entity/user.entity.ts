@@ -36,6 +36,12 @@ export class UserNest {
   @Column({ type: 'varchar', name: 'password' })
   password: string
 
+  @Column({ type: 'varchar', name: 'picture', nullable: true })
+  picture: Buffer | File
+  
+  @Column({ type: 'varchar', name: 'role', default: 'Author' })
+  role: string
+
   @UpdateDateColumn()
   updated: Date
 
@@ -50,6 +56,7 @@ export class UserNest {
     this.lastName = getOrDefault(copy.lastName, undefined)
     this.mobilePhone = getOrDefault(copy.mobilePhone, undefined)
     this.password = getOrDefault(copy.password, undefined)
+    this.picture = getOrDefault(copy.picture, undefined)
     this.userId = getOrDefault(copy.userId, undefined) as any
   }
 }

@@ -2,17 +2,23 @@ import { UserNest } from '../user/entity/user.entity'
 import { ArticleRepository } from './article.repository'
 import { ArticleService } from './article.service'
 import { Article } from './entity/article.entity'
+import { UserNestService } from '../user/user.service';
+import { UserNestRepository } from '../user/user.repository';
 
 describe('ArticleService', () => {
   let service: ArticleService
+  let userService: UserNestService
+  let userRepo: UserNestRepository
   let repository: ArticleRepository
 
   beforeAll(() => {
     repository = {} as any
-    service = new ArticleService(repository)
+    userRepo = {} as any
+    userService = new UserNestService(userRepo)
+    service = new ArticleService(repository, userService)
   })
 
-  describe('create', () => {
+  describe('create', async () => {
     it('Should call and return repository.create with article passed in param', async () => {
       const newArticle = new Article({
         title: 'Mon super article',
@@ -31,7 +37,7 @@ describe('ArticleService', () => {
     })
   })
 
-  describe('getById', () => {
+  describe('getById', async () => {
     it('Should call and return repository.findOne with id passed in param', async () => {
       const id = 'uid'
       const user = { name: 'toto' }
@@ -44,7 +50,7 @@ describe('ArticleService', () => {
     })
   })
 
-  describe('getByTitle', () => {
+  describe('getByTitle', async () => {
     it('Should call and return repository.findOne with title passed in param', async () => {
       const title = 'article 1'
       const user = { name: 'toto' }
@@ -57,7 +63,7 @@ describe('ArticleService', () => {
     })
   })
 
-  describe('getAllPagined', () => {
+  describe('getAllPagined', async () => {
     it('Should call and return repository.find with step passed in param', async () => {
       let lstArticles = []
       let i: number
@@ -76,6 +82,32 @@ describe('ArticleService', () => {
 
       expect(result).toBe(lstPagined)
       expect(repository.find).toHaveBeenCalledWith({ skip: step * 20, take: 20 })
+    })
+  })
+
+  describe('getAllArticlesByAuthorId', async () => {
+    it('Should call and return repository.find with author id passed in param', async () => {
+      const author1Id = 'authorId'
+      let lstArticles = []
+      let lstArticles2 = []
+      let i: number
+      let authorOfArticles = new UserNest()
+      let author2OfArticles = new UserNest()
+
+      for (i = 0; i < 10; i++) {
+        lstArticles.push(new Article({ title: 'Article ' + i + 10, author: authorOfArticles }))
+      }
+
+      for (i = 0; i < 5; i++) {
+        lstArticles2.push(new Article({ title: 'Article ' + i, author: author2OfArticles }))
+      }
+
+      repository.find = jest.fn().mockResolvedValue(lstArticles)
+      userService.getById = jest.fn().mockResolvedValue(authorOfArticles)
+      
+      const result = await service.getAllArticlesByAuthorId(author1Id)
+
+      expect(result).toBe(lstArticles)
     })
   })
 })

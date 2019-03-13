@@ -13,9 +13,6 @@ export class ArticlePostInDto {
   readonly content: string
 
   @ApiModelProperty()
-  readonly created: Date
-
-  @ApiModelProperty()
   readonly dateLastToken: Date
 
   @ApiModelProperty()
