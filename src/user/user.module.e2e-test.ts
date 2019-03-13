@@ -11,6 +11,7 @@ import { AuthModule } from '../auth/auth.module'
 import { UserNestRepository } from './user.repository'
 import { FunctionUtils } from '../utils/functions'
 import { IAuthHeaders } from '../auth/interfaces/IAuthHeaders'
+import { UserDeleteInDto } from './dto/user-delete-in-dto';
 
 describe('UserNestController (e2e)', () => {
   let app: INestApplication
@@ -147,6 +148,20 @@ describe('UserNestController (e2e)', () => {
           // The number of properties getted (userId, firstName, lastName, role)
           expect(Object.keys(res.body[0]).length).toEqual(4)
         })
+    })
+  })
+
+  describe('Delete User', async () => {
+    it('/user/delete logged', async () => {
+      let dataToSend = new UserDeleteInDto()
+      dataToSend.adminId = userAdmin.userId
+      dataToSend.userId = (await FunctionUtils.generateUserTest(app, 'user-to-remove@gmail.com')).user.userId
+
+      return request(app.getHttpServer())
+        .delete('/user/delete')
+        .send(dataToSend)
+        .set(headers)
+        .expect(200)
     })
   })
 })

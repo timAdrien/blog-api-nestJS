@@ -121,4 +121,19 @@ export class UserNestService {
       throw new UnauthorizedException('Admin not found')
     }
   }
+  
+  /**
+   * hard delete user
+   *
+   * @param id - article id
+   * @returns Resolves with Article
+   */
+  async delete(adminId: string, userId: string) {
+    const admin = await this.getById(adminId)
+    if (admin && admin.role == 'Administrator') {
+      return this.userRepository.delete(userId)
+    } else {
+      throw new UnauthorizedException('You cannot remove this user')
+    }
+  }
 }

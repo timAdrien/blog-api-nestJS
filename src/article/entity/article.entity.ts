@@ -18,7 +18,8 @@ export class Article {
 
   @ManyToOne(type => UserNest, user => user.articles, {
     eager: true,
-    cascade: true
+    cascade: true, 
+    onDelete: "CASCADE"
   })
   author: UserNest
 
