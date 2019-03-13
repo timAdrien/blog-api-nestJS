@@ -84,7 +84,7 @@ describe('UserNestController (e2e)', () => {
 
   describe('User Sign in/up', async () => {
     it('Update user infos', async () => {
-      userConnected.email = 'ta-modified@gmail.com'
+      userConnected.email = 'ta@gmail.com'
       userConnected.firstName = 'modified test update firstName'
       userConnected.lastName = 'modified test update lastName'
       userConnected.mobilePhone = '0600000000'
@@ -97,7 +97,7 @@ describe('UserNestController (e2e)', () => {
         .send(userConnected)
         .expect(200)
         .then(res => {
-          expect(res.body.email).toEqual('ta-modified@gmail.com')
+          expect(res.body.email).toEqual('ta@gmail.com')
           expect(res.body.firstName).toEqual('modified test update firstName')
           expect(res.body.lastName).toEqual('modified test update lastName')
           expect(res.body.mobilePhone).toEqual('0600000000')

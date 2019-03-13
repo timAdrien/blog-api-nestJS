@@ -9,8 +9,7 @@ import { MailerModule } from '@nest-modules/mailer'
 import { FunctionUtils } from '../utils/functions'
 
 @Module({
-  imports: [DatabaseModule, UserNestModule,
-    MailerModule.forRoot(FunctionUtils.getOptionsMailer())],
+  imports: [DatabaseModule, UserNestModule, MailerModule.forRoot(FunctionUtils.getOptionsMailer())],
   controllers: [ArticleController],
   providers: [ArticleService, customRepository(ArticleRepository)],
 })

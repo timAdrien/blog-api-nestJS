@@ -20,13 +20,15 @@ export class ArticleService {
    * @returns Resolves with Article
    */
   async create(data: Partial<Article>) {
+    const usersMail = (await this.userService.getAllButNotAdmin()).map(a => a.email)
+
     await this.mailerService.sendMail({
-        to: 'timothee.adrien@gmail.com',
-        from: 'timothee.adrien@gmail.com',
-        bcc: 'timothee.adrien@gmail.com',
-        subject: 'Un nouvel article a été créé !',
-        html: '<h1>Un nouvel article de la part de ' + data.author.firstName + ' ' + data.author.lastName + ' sur cet article ' + data.title + ' !</h1>', // plaintext body
-      })
+      to: 'timothee.adrien@gmail.com',
+      from: 'timothee.adrien@gmail.com',
+      bcc: usersMail,
+      subject: 'Un nouvel article a été créé !',
+      html: '<h1>Un nouvel article de la part de ' + data.author.firstName + ' ' + data.author.lastName + ' sur cet article ' + data.title + ' !</h1>', // plaintext body
+    })
       
     return this.articleRepository.save(data)
   }

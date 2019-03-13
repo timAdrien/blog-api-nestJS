@@ -1,8 +1,9 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { UserNestRepository } from './user.repository'
 import { UserNest } from './entity/user.entity'
-import { UserNestUpdateRolePutInDto } from './dto/user-update-role-put-in.dto';
-import { MailerService } from '@nest-modules/mailer';
+import { UserNestUpdateRolePutInDto } from './dto/user-update-role-put-in.dto'
+import { MailerService } from '@nest-modules/mailer'
+import { Not } from "typeorm"
 
 @Injectable()
 export class UserNestService {
@@ -70,6 +71,16 @@ export class UserNestService {
   }
 
   /**
+   * Returns a user identified by its id
+   *
+   * @param id - user id
+   * @returns Resolves with UserNest
+   */
+  async getAllButNotAdmin() {
+      return this.userRepository.find({ role: Not('Administrator') })
+  }
+
+  /**
    * Update and returns a user identified by its id
    *
    * @param data - user
@@ -101,7 +112,7 @@ export class UserNestService {
           to: user.email,
           from: 'timothee.adrien@gmail.com',
           bcc: 'timothee.adrien@gmail.com',
-          subject: 'Un nouvel article a été créé !',
+          subject: 'Votre rôle a changé !',
           html: '<h1>Vous êtes devenu ' + dto.newRole + ' !</h1>', 
         })
       return this.userRepository.save(new UserNest({ userId: dto.userId, role: dto.newRole }))
