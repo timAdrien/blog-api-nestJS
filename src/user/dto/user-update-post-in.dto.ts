@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger'
-import { IsEmail, IsString, IsDefined, MaxLength, IsMobilePhone, IsUUID } from 'class-validator'
+import { IsEmail, IsString, IsDefined, MaxLength, IsMobilePhone, IsUUID, IsBase64 } from 'class-validator'
 
 export class UserNestUpdatePostInDto {
 
@@ -30,4 +30,9 @@ export class UserNestUpdatePostInDto {
   @IsDefined()
   @ApiModelProperty()
   userId: string
+
+  @IsBase64()
+  @IsDefined()
+  @ApiModelProperty()
+  picture: string
 }

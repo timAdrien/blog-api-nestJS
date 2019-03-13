@@ -1,6 +1,7 @@
 import { UserNestController } from './user.controller'
 import { UserNestService } from './user.service'
 import { UserNestUpdatePostInDto } from './dto/user-update-post-in.dto';
+import { UserNest } from './entity/user.entity';
 
 describe('UserNest Controller', () => {
   let controller: UserNestController
@@ -25,14 +26,14 @@ describe('UserNest Controller', () => {
   })
 
   describe('update', () => {
-    it('should update the article and return it', async () => {
+    it('should update the user and return it', async () => {
       const user = new UserNestUpdatePostInDto()
       service.update = jest.fn().mockResolvedValue(user)
 
       const result = await controller.update(user)
 
       expect(result).toBe(user)
-      expect(service.update).toHaveBeenCalledWith(user)
+      expect(service.update).toHaveBeenCalledWith(new UserNest())
     })
   })
 })

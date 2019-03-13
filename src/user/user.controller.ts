@@ -3,6 +3,7 @@ import { ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger'
 import { UserNestService } from './user.service'
 import { JwtAuthGuard } from '../auth/auth.guard'
 import { UserNestUpdatePostInDto } from './dto/user-update-post-in.dto';
+import { UserNest } from './entity/user.entity';
 
 @ApiUseTags('UserNest')
 @ApiBearerAuth()
@@ -25,9 +26,18 @@ export class UserNestController {
   @ApiResponse({ status: HttpStatus.OK, description: 'UserNest mis à jour' })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'UserNest non trouvé :/',
+    description: 'UserNest non mis à jour :/',
   })
   async update(@Body() dto: UserNestUpdatePostInDto) {
-    return this.userService.update(dto)
+    let userNest = new UserNest({
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      mobilePhone: dto.mobilePhone,
+      userId: dto.userId,
+      picture: dto.picture ? Buffer.from(dto.picture) : undefined
+    })
+
+    return this.userService.update(userNest)
   }
 }
