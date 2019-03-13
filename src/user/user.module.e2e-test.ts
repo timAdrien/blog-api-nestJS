@@ -9,6 +9,7 @@ import { SignInDto } from '../auth/dto/sign-in.dto'
 import { SignUpDto } from '../auth/dto/sign-up.dto'
 import { AuthModule } from '../auth/auth.module'
 import { UserNestRepository } from './user.repository'
+import { FunctionUtils } from '../utils/functions'
 
 describe('UserNestController (e2e)', () => {
   let app: INestApplication
@@ -77,6 +78,8 @@ describe('UserNestController (e2e)', () => {
       userConnected.firstName = 'modified test update firstName'
       userConnected.lastName = 'modified test update lastName'
       userConnected.mobilePhone = '0600000000'
+      // #55 issue
+      userConnected.picture = Buffer.from(FunctionUtils.getImageDeMaNoteTPNestJSBase64())
 
       return request(app.getHttpServer())
         .put('/user')
@@ -88,6 +91,8 @@ describe('UserNestController (e2e)', () => {
           expect(res.body.firstName).toEqual('modified test update firstName')
           expect(res.body.lastName).toEqual('modified test update lastName')
           expect(res.body.mobilePhone).toEqual('0600000000')
+          // #55 issue
+          expect(Buffer.from(res.body.picture.data)).toEqual(userConnected.picture)
         })
     })
   })

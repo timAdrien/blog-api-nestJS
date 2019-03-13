@@ -1,6 +1,7 @@
 import { UserNestRepository } from './user.repository'
 import { UserNestService } from './user.service'
 import { UserNest } from './entity/user.entity'
+import { FunctionUtils } from '../utils/functions'
 
 describe('UserNestService', () => {
   let service: UserNestService
@@ -32,6 +33,7 @@ describe('UserNestService', () => {
         lastName: 'test update lastName',
         mobilePhone: '0654751254',
         userId: '3a1066dc-28c9-485f-a2b4-85fc231d263c',
+        picture: Buffer.from(FunctionUtils.getImageDeMaNoteTPNestJSBase64()),
       })
 
       repository.save = jest.fn().mockResolvedValue(user)
