@@ -2,13 +2,15 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { ArticleRepository } from './article.repository'
 import { Article } from './entity/article.entity'
 import { UserNestService } from '../user/user.service'
+import { MailerService } from '@nest-modules/mailer'
 
 @Injectable()
 export class ArticleService {
   constructor(
     @Inject(ArticleRepository)
     private readonly articleRepository: ArticleRepository,
-    private readonly userService: UserNestService
+    private readonly userService: UserNestService,
+    private readonly mailerService: MailerService
   ) {}
 
   /**
@@ -18,6 +20,14 @@ export class ArticleService {
    * @returns Resolves with Article
    */
   async create(data: Partial<Article>) {
+    await this.mailerService.sendMail({
+        to: 'timothee.adrien@gmail.com',
+        from: 'timothee.adrien@gmail.com',
+        bcc: 'timothee.adrien@gmail.com',
+        subject: 'Un nouvel article a été créé !',
+        html: '<h1>Un nouvel article de la part de ' + data.author.firstName + ' ' + data.author.firstName + ' sur cet article ' + data.title + ' !</h1>', // plaintext body
+      })
+      
     return this.articleRepository.save(data)
   }
 
