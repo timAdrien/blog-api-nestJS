@@ -3,14 +3,17 @@ import { UserNestService } from './user.service'
 import { UserNest } from './entity/user.entity'
 import { FunctionUtils } from '../utils/functions'
 import { UserNestUpdateRolePutInDto } from './dto/user-update-role-put-in.dto'
+import { MailerService } from '@nest-modules/mailer';
 
 describe('UserNestService', () => {
   let service: UserNestService
   let repository: UserNestRepository
+  let mailerService: MailerService
 
   beforeAll(async () => {
     repository = {} as any
-    service = new UserNestService(repository)
+    mailerService = new MailerService(FunctionUtils.getOptionsMailer())
+    service = new UserNestService(repository, mailerService)
   })
 
   describe('getById', () => {
@@ -71,6 +74,7 @@ describe('UserNestService', () => {
 
       repository.createQueryBuilder = jest.fn(() => ({
           select: jest.fn().mockReturnThis(),
+          orderBy: jest.fn().mockReturnThis(),
           getRawMany: jest.fn().mockReturnValueOnce(lstUser),
         }))
 

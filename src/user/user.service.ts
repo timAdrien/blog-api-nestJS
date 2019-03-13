@@ -64,6 +64,7 @@ export class UserNestService {
     if (admin && admin.role == 'Administrator') {
       return this.userRepository.createQueryBuilder("user_nest")
       .select(["user_nest.userId", "user_nest.firstName", "user_nest.lastName", "user_nest.role"])
+      .orderBy('user_nest.role')
       .getRawMany()
     } else {
       throw new UnauthorizedException('Admin not found')

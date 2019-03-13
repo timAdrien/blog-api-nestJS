@@ -17,13 +17,15 @@ describe('ArticleService', () => {
   beforeAll(() => {
     repository = {} as any
     userRepo = {} as any
-    userService = new UserNestService(userRepo)
     mailerService = new MailerService(FunctionUtils.getOptionsMailer())
+    userService = new UserNestService(userRepo, mailerService)
     service = new ArticleService(repository, userService, mailerService)
   })
 
   describe('create', async () => {
     it('Should call and return repository.create with article passed in param', async () => {
+      let lstUser = [new UserNest(), new UserNest(), new UserNest(), new UserNest()]
+
       const newArticle = new Article({
         title: 'Mon super article',
         content: 'Damn quel super article',
@@ -32,6 +34,7 @@ describe('ArticleService', () => {
         author: new UserNest({ firstName: 'Tim', lastName: 'Adrien' }),
       })
 
+      userRepo.find = jest.fn().mockResolvedValue(lstUser)
       repository.save = jest.fn().mockResolvedValue(newArticle)
 
       const result = await service.create(newArticle)
