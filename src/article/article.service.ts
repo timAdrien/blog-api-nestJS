@@ -120,7 +120,7 @@ export class ArticleService {
    */
   async delete(idArticle: string, idAuthor: string) {
     const author = await this.userService.getById(idAuthor)
-    if(author && author.role == 'Author') {
+    if(author && author.role == "Author") {
       return this.articleRepository.delete(idArticle)
     } else {
       throw new UnauthorizedException('You cannot remove this article')

@@ -56,6 +56,7 @@ export class UserNest {
     this.lastName = getOrDefault(copy.lastName, undefined)
     this.mobilePhone = getOrDefault(copy.mobilePhone, undefined)
     this.password = getOrDefault(copy.password, undefined)
+    this.role = getOrDefault(copy.role, undefined)
     this.picture = getOrDefault(copy.picture, undefined)
     this.userId = getOrDefault(copy.userId, undefined) as any
   }

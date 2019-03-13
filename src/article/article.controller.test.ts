@@ -109,4 +109,16 @@ describe('Article Controller', () => {
       expect(service.getAllArticlesByAuthorId).toHaveBeenCalledWith(author1Id)
     })
   })
+
+  describe('delete article', async () => {
+    it('Should call service.delete with article id passed in param', async () => {
+      
+      service.delete = jest.fn().mockResolvedValue({})
+      
+      const result = await controller.delete({articleId: 'articleId', authorId: 'authorId'})
+
+      expect(result).toEqual({})
+      expect(service.delete).toHaveBeenCalledWith('articleId', 'authorId')
+    })
+  })
 })

@@ -115,12 +115,12 @@ describe('ArticleService', () => {
     it('Should call repository.delete with article id passed in param', async () => {
       let authorOfArticles = new UserNest({ role: 'Author' })
       
-      repository.delete = jest.fn().mockResolvedValue(authorOfArticles)
+      repository.delete = jest.fn().mockResolvedValue({})
       userService.getById = jest.fn().mockResolvedValue(authorOfArticles)
       
       const result = await service.delete('articleId', 'authorId')
 
-      expect(result).toBe(authorOfArticles)
+      expect(result).toEqual({})
       expect(repository.delete).toHaveBeenCalledWith('articleId')
       expect(userService.getById).toHaveBeenCalledWith('authorId')
     })

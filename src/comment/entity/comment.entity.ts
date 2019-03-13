@@ -12,7 +12,9 @@ import {  getCopyConstruction, getCopyConstructions, getOrDefault } from '../../
 
 @Entity()
 export class Comment {
-  @ManyToOne(type => Article, article => article.comments)
+  @ManyToOne(type => Article, article => article.comments, {
+    onDelete: "CASCADE"
+  })
   article: Article
 
   @ManyToOne(type => UserNest, user => user.comments)

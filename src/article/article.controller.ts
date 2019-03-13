@@ -80,7 +80,7 @@ export class ArticleController {
     return this.articleService.update(data, data.author.userId)
   }
   
-  @Delete('delete/:id')
+  @Delete('delete')
   @ApiResponse({ status: HttpStatus.OK, description: 'Article supprimé.' })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
