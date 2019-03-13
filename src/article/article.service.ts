@@ -108,7 +108,7 @@ export class ArticleService {
         }
       })
     } else {
-      throw new UnauthorizedException('You get these articles')
+      throw new UnauthorizedException('Author not found')
     }
   }
   

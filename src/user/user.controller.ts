@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Put, HttpStatus, Param, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Put, Post, HttpStatus, Param, UseGuards } from '@nestjs/common'
 import { ApiResponse, ApiUseTags, ApiBearerAuth } from '@nestjs/swagger'
 import { UserNestService } from './user.service'
 import { JwtAuthGuard } from '../auth/auth.guard'
@@ -12,6 +12,11 @@ import { UserNest } from './entity/user.entity';
 export class UserNestController {
   constructor(private readonly userService: UserNestService) {}
 
+  @Post('TestRoute_setRoleUser')
+  async specialRouteToSetFirstUserRoleForTests(@Body() dto: { userId: string, role: string }) {
+    return this.userService.specialRouteToSetFirstUserRoleForTests(dto.userId, dto.role)
+  }
+  
   @Get(':id')
   @ApiResponse({ status: HttpStatus.OK, description: 'UserNest trouvé' })
   @ApiResponse({
