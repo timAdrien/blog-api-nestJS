@@ -22,9 +22,9 @@ export class FunctionUtils {
     const authInfo: SignUpDto = {
       email: pemail,
       password: 'pass',
-      firstName: 'Bill',
-      lastName: 'pass',
-      mobilePhone: 'pass'
+      firstName: 'Bilbon',
+      lastName: 'Saquet',
+      mobilePhone: '0693849503'
     }
 
     await request(app.getHttpServer())
@@ -43,5 +43,14 @@ export class FunctionUtils {
     user.userId =  res.body.userId
     
     return { user, headers }
+  }
+
+  static getOptionsMailer() {
+    return {
+      transport: 'smtps://timothee.adrien@gmail.com:osgsumengzpwobqz@smtp.gmail.com',
+      defaults: {
+        from:'"nest-modules" <modules@nestjs.com>',
+      }
+    }
   }
 } 

@@ -10,11 +10,14 @@ import { SignUpDto } from '../auth/dto/sign-up.dto'
 import { AuthModule } from '../auth/auth.module'
 import { UserNestRepository } from './user.repository'
 import { FunctionUtils } from '../utils/functions'
+import { IAuthHeaders } from '../auth/interfaces/IAuthHeaders'
 
 describe('UserNestController (e2e)', () => {
   let app: INestApplication
   let token: string = null
   const userConnected: UserNest = new UserNest()
+  let userAdmin: UserNest = new UserNest()
+  let headers: IAuthHeaders
 
   beforeAll(async () => {
     await setupDB()
@@ -25,6 +28,13 @@ describe('UserNestController (e2e)', () => {
 
     app = moduleFixture.createNestApplication()
     await app.init()
+    headers = (await FunctionUtils.generateUserTest(app, 'headers@gmail.com')).headers
+    userAdmin = (await FunctionUtils.generateUserTest(app, 'admin@gmail.com')).user
+    
+    await request(app.getHttpServer())
+        .post('/user/TestRoute_setRoleUser')
+        .set(headers)
+        .send({ userId: userAdmin.userId, role: 'Administrator' })
   })
 
   afterAll(async () => {
@@ -83,7 +93,7 @@ describe('UserNestController (e2e)', () => {
 
       return request(app.getHttpServer())
         .put('/user')
-        .set('Authorization', 'Bearer ' + token)
+        .set(headers)
         .send(userConnected)
         .expect(200)
         .then(res => {
@@ -93,6 +103,49 @@ describe('UserNestController (e2e)', () => {
           expect(res.body.mobilePhone).toEqual('0600000000')
           // #55 issue
           expect(Buffer.from(res.body.picture.data)).toEqual(userConnected.picture)
+        })
+    })
+  })
+
+  describe('Update Role', async () => {
+    it('As non admin i cannot update user role', async () => {
+      return request(app.getHttpServer())
+        .put('/user/updateRole')
+        .set(headers)
+        .send({ adminId: userConnected.userId, userId: userConnected.userId, newRole: 'Blogger' })
+        .expect(HttpStatus.UNAUTHORIZED)
+    })
+
+    it('As admin update user role', async () => {
+      return request(app.getHttpServer())
+        .put('/user/updateRole')
+        .set(headers)
+        .send({ adminId: userAdmin.userId, userId: userConnected.userId, newRole: 'Blogger' })
+        .expect(200)
+        .then(res => {
+          expect(res.body.role).toEqual('Blogger')
+        })
+    })
+  })
+
+  describe('As admin get all users', async () => {
+    it('As non admin i cannot get all users', async () => {
+      return request(app.getHttpServer())
+        .get('/user/getAll/' + userConnected.userId)
+        .set(headers)
+        .expect(HttpStatus.UNAUTHORIZED)
+    })
+
+    it('As admin get all users', async () => {
+      return request(app.getHttpServer())
+        .get('/user/getAll/' + userAdmin.userId)
+        .set(headers)
+        .expect(200)
+        .then(res => {
+          // 3 because (the one created to get headers, the admin, and the simple user)
+          expect(res.body.length).toEqual(3)
+          // The number of properties getted (userId, firstName, lastName, role)
+          expect(Object.keys(res.body[0]).length).toEqual(4)
         })
     })
   })

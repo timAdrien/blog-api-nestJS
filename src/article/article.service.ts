@@ -3,6 +3,8 @@ import { ArticleRepository } from './article.repository'
 import { Article } from './entity/article.entity'
 import { UserNestService } from '../user/user.service'
 import { MailerService } from '@nest-modules/mailer'
+import { ArticleGetOutDto } from './dto/article-get-out.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ArticleService {
@@ -25,7 +27,7 @@ export class ArticleService {
         from: 'timothee.adrien@gmail.com',
         bcc: 'timothee.adrien@gmail.com',
         subject: 'Un nouvel article a été créé !',
-        html: '<h1>Un nouvel article de la part de ' + data.author.firstName + ' ' + data.author.firstName + ' sur cet article ' + data.title + ' !</h1>', // plaintext body
+        html: '<h1>Un nouvel article de la part de ' + data.author.firstName + ' ' + data.author.lastName + ' sur cet article ' + data.title + ' !</h1>', // plaintext body
       })
       
     return this.articleRepository.save(data)

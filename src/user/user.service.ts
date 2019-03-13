@@ -1,6 +1,7 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { UserNestRepository } from './user.repository'
 import { UserNest } from './entity/user.entity'
+import { UserNestUpdateRolePutInDto } from './dto/user-update-role-put-in.dto';
 
 @Injectable()
 export class UserNestService {
@@ -50,6 +51,23 @@ export class UserNestService {
   }
 
   /**
+   * Returns a user identified by its id
+   *
+   * @param id - user id
+   * @returns Resolves with UserNest
+   */
+  async getAll(adminId: string) {
+    const admin = await this.getById(adminId)
+    if (admin && admin.role == 'Administrator') {
+      return this.userRepository.createQueryBuilder("user_nest")
+      .select(["user_nest.userId", "user_nest.firstName", "user_nest.lastName", "user_nest.role"])
+      .getRawMany()
+    } else {
+      throw new UnauthorizedException('Admin not found')
+    }
+  }
+
+  /**
    * Update and returns a user identified by its id
    *
    * @param data - user
@@ -68,15 +86,15 @@ export class UserNestService {
   }
 
   /**
-   * Update role and returns a user identified by its id
+   * Update role and returns a user
    *
    * @param data - user
    * @returns Resolves with UserNest
    */
-  async updateRoleUser(idAdmin: string, idUser: string, newRole: string) {
-    const admin = await this.getById(idAdmin)
+  async updateRoleUser(dto: UserNestUpdateRolePutInDto) {
+    const admin = await this.getById(dto.adminId)
     if (admin && admin.role == 'Administrator') {
-      return this.userRepository.save(new UserNest({ userId: idUser, role: newRole }))
+      return this.userRepository.save(new UserNest({ userId: dto.userId, role: dto.newRole }))
     } else {
       throw new UnauthorizedException('Admin not found')
     }

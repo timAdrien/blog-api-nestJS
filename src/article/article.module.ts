@@ -5,16 +5,12 @@ import { ArticleController } from './article.controller'
 import { ArticleRepository } from './article.repository'
 import { ArticleService } from './article.service'
 import { UserNestModule } from '../user/user.module'
-import { MailerModule, HandlebarsAdapter } from '@nest-modules/mailer'
+import { MailerModule } from '@nest-modules/mailer'
+import { FunctionUtils } from '../utils/functions'
 
 @Module({
   imports: [DatabaseModule, UserNestModule,
-    MailerModule.forRoot({
-    transport: 'smtps://timothee.adrien@gmail.com:osgsumengzpwobqz@smtp.gmail.com',
-    defaults: {
-      from:'"nest-modules" <modules@nestjs.com>',
-    }
-  })],
+    MailerModule.forRoot(FunctionUtils.getOptionsMailer())],
   controllers: [ArticleController],
   providers: [ArticleService, customRepository(ArticleRepository)],
 })
