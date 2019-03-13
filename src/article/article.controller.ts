@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Get, HttpStatus, Param, Post, Put, Delete } from '@nestjs/common'
 import { ApiResponse, ApiUseTags } from '@nestjs/swagger'
 import { ArticleService } from './article.service'
 import { ArticlePostInDto } from './dto/article-post-in.dto'
-import { ArticlePutInDto } from './dto/article-put-in.dto';
+import { ArticlePutInDto } from './dto/article-put-in.dto'
+import { ArticleDeleteInDto } from './dto/article-delete-in.dto'
 
 @ApiUseTags('Article')
 @Controller('article')
@@ -77,5 +78,15 @@ export class ArticleController {
   })
   async update(@Body() data: ArticlePutInDto) {
     return this.articleService.update(data, data.author.userId)
+  }
+  
+  @Delete('delete/:id')
+  @ApiResponse({ status: HttpStatus.OK, description: 'Article supprimé.' })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Une erreur est survenue dans la suppression de l\'article'
+  })
+  async delete(@Body() data: ArticleDeleteInDto) {
+    return this.articleService.delete(data.articleId ,data.authorId)
   }
 }
