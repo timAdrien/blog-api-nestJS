@@ -2,11 +2,13 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { UserNestRepository } from './user.repository'
 import { UserNest } from './entity/user.entity'
 import { UserNestUpdateRolePutInDto } from './dto/user-update-role-put-in.dto';
+import { MailerService } from '@nest-modules/mailer';
 
 @Injectable()
 export class UserNestService {
   constructor(
-    @Inject(UserNestRepository) private readonly userRepository: UserNestRepository
+    @Inject(UserNestRepository) private readonly userRepository: UserNestRepository,
+    private readonly mailerService: MailerService
   ) {}
 
   /**
@@ -94,6 +96,14 @@ export class UserNestService {
   async updateRoleUser(dto: UserNestUpdateRolePutInDto) {
     const admin = await this.getById(dto.adminId)
     if (admin && admin.role == 'Administrator') {
+      const user = await this.getById(dto.userId)
+      await this.mailerService.sendMail({
+          to: user.email,
+          from: 'timothee.adrien@gmail.com',
+          bcc: 'timothee.adrien@gmail.com',
+          subject: 'Un nouvel article a été créé !',
+          html: '<h1>Vous êtes devenu ' + dto.newRole + ' !</h1>', 
+        })
       return this.userRepository.save(new UserNest({ userId: dto.userId, role: dto.newRole }))
     } else {
       throw new UnauthorizedException('Admin not found')
