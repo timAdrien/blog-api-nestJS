@@ -87,7 +87,7 @@ describe('ArticleController (e2e)', () => {
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual(null)
-          expect(res.body.author.firstName).toEqual('Bill')
+          expect(res.body.author.firstName).toEqual('Bilbon')
           expect(res.body.comments.length).toEqual(2)
         })
     })
@@ -99,7 +99,7 @@ describe('ArticleController (e2e)', () => {
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual(null)
-          expect(res.body.author.firstName).toEqual('Bill')
+          expect(res.body.author.firstName).toEqual('Bilbon')
           expect(res.body.comments.length).toEqual(2)
         })
     })
@@ -112,7 +112,7 @@ describe('ArticleController (e2e)', () => {
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual(null)
-          expect(res.body.author.firstName).toEqual('Bill')
+          expect(res.body.author.firstName).toEqual('Bilbon')
           expect(res.body.comments.length).toEqual(2)
         })
     })
@@ -124,7 +124,7 @@ describe('ArticleController (e2e)', () => {
         .expect(200)
         .then(res => {
           expect(res.body.author.password).toEqual(null)
-          expect(res.body.author.firstName).toEqual('Bill')
+          expect(res.body.author.firstName).toEqual('Bilbon')
           expect(res.body.comments.length).toEqual(2)
         })
     })

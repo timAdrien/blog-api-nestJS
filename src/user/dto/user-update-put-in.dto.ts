@@ -1,7 +1,7 @@
 import { ApiModelProperty } from '@nestjs/swagger'
 import { IsEmail, IsString, IsDefined, MaxLength, IsMobilePhone, IsUUID, IsBase64 } from 'class-validator'
 
-export class UserNestUpdatePostInDto {
+export class UserNestUpdatePutInDto {
 
   @IsEmail()
   @IsDefined()

@@ -4,9 +4,12 @@ import { ArticleService } from './article.service'
 import { Article } from './entity/article.entity'
 import { UserNestService } from '../user/user.service';
 import { UserNestRepository } from '../user/user.repository';
+import { MailerService } from '@nest-modules/mailer'
+import { FunctionUtils } from '../utils/functions'
 
 describe('ArticleService', () => {
   let service: ArticleService
+  let mailerService: MailerService
   let userService: UserNestService
   let userRepo: UserNestRepository
   let repository: ArticleRepository
@@ -15,7 +18,8 @@ describe('ArticleService', () => {
     repository = {} as any
     userRepo = {} as any
     userService = new UserNestService(userRepo)
-    service = new ArticleService(repository, userService)
+    mailerService = new MailerService(FunctionUtils.getOptionsMailer())
+    service = new ArticleService(repository, userService, mailerService)
   })
 
   describe('create', async () => {
@@ -25,7 +29,7 @@ describe('ArticleService', () => {
         content: 'Damn quel super article',
         likes: 5,
         disLikes: 1,
-        author: new UserNest({ firstName: 'Tim', lastName: 'Ad' }),
+        author: new UserNest({ firstName: 'Tim', lastName: 'Adrien' }),
       })
 
       repository.save = jest.fn().mockResolvedValue(newArticle)
