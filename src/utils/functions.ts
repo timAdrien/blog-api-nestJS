@@ -44,5 +44,4 @@ export class FunctionUtils {
     
     return { user, headers }
   }
-  
 } 

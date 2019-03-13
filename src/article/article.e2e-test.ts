@@ -41,10 +41,12 @@ describe('ArticleController (e2e)', () => {
     
     await request(app.getHttpServer())
         .post('/user/TestRoute_setRoleUser')
+        .set(headers)
         .send({ userId: userAdmin.userId, role: 'Administrator' })
     
-    await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
         .post('/user/TestRoute_setRoleUser')
+        .set(headers)
         .send({ userId: userAuthor.userId, role: 'Author' })
   })
 
