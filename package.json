@@ -13,7 +13,7 @@
     "prestart:prod": "rimraf dist && tsc",
     "start:prod": "node dist/index.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "test": "./node_modules/.bin/jest --silent=false --config=jest.json",
+    "test": "./node_modules/.bin/jest --silent=false --detectOpenHandles --config=jest.json",
     "e2e": "./node_modules/.bin/jest --silent=false --runInBand --config=test/jest-e2e.json",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
