@@ -9,6 +9,7 @@ import {
 import { Article } from '../../article/entity/article.entity'
 import { Comment } from '../../comment/entity/comment.entity'
 import { getCopyConstructions, getOrDefault } from '../../utils/copy-constructor.tools'
+import { NoteArticle } from 'src/article/entity/note-article.entity';
 
 @Entity()
 export class UserNest {
@@ -17,6 +18,9 @@ export class UserNest {
 
   @OneToMany(type => Comment, comment => comment.author)
   comments: Comment[]
+
+  @OneToMany(type => NoteArticle, note => note.user)
+  notesArticle: NoteArticle[]
 
   @CreateDateColumn()
   created: Date
