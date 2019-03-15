@@ -6,10 +6,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm'
 import { Comment } from '../../comment/entity/comment.entity'
 import { UserNest } from '../../user/entity/user.entity'
 import {  getCopyConstruction, getCopyConstructions, getOrDefault } from '../../utils/copy-constructor.tools'
+import { NoteArticle } from './note-article.entity';
 
 @Entity()
 export class Article {
@@ -22,6 +24,13 @@ export class Article {
     onDelete: "CASCADE"
   })
   author: UserNest
+
+  @OneToOne(type => NoteArticle, note => note.article, {
+    eager: true,
+    cascade: true, 
+    onDelete: "CASCADE"
+  })
+  noteArticle: NoteArticle
 
   @OneToMany(type => Comment, comment => comment.article, {
     eager: true,
